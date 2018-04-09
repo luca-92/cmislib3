@@ -25,7 +25,7 @@ import iso8601
 import logging
 import datetime
 from cmislib.domain import CmisId
-from urllib import urlencode, quote
+from urllib.parse import urlencode, quote
 
 moduleLogger = logging.getLogger('cmislib.util')
 
@@ -34,7 +34,7 @@ def to_utf8(value):
 
     """ Safe encodng of value to utf-8 taking care of unicode values
     """
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = value.encode('utf8')
     return value
 
@@ -48,7 +48,7 @@ def safe_urlencode(in_dict):
 
     def encoded_dict(in_dict):
         out_dict = {}
-        for k, v in in_dict.iteritems():
+        for k, v in in_dict.items():
             out_dict[k] = to_utf8(v)
         return out_dict
 
@@ -161,7 +161,7 @@ def parseDateTimeValue(value):
     """
     Utility function to return a datetime from a string.
     """
-    if type(value) == str or type(value) == unicode:
+    if type(value) == str:
         return iso8601.parse_date(value)
     elif type(value) == int:
         return datetime.datetime.fromtimestamp(value / 1000)

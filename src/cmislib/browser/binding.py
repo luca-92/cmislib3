@@ -21,6 +21,11 @@
 Module containing the browser binding-specific objects used to work with a CMIS
 provider.
 """
+import ssl
+
+import io
+import requests
+
 from cmislib.cmis_services import Binding, RepositoryServiceIfc
 from cmislib.domain import CmisId, CmisObject, ObjectType, ACL, ACE, ChangeEntry
 from cmislib.exceptions import CmisException, InvalidArgumentException,\
@@ -31,7 +36,7 @@ from cmislib.util import parsePropValueByType, parseDateTimeValue, safe_quote,\
 from cmislib import messages
 import json
 import logging
-import StringIO
+from io import StringIO
 import time
 
 CMIS_FORM_TYPE = 'application/x-www-form-urlencoded;charset=utf-8'
@@ -69,16 +74,14 @@ class BrowserBinding(Binding):
         # merge the cmis client extended args with the ones that got passed in
         if len(self.extArgs) > 0:
             kwargs.update(self.extArgs)
-
-        resp, content = Rest().get(url,
-                                   username=username,
-                                   password=password,
-                                   **kwargs)
+        if type(url) == bytes:
+            url = url.decode("utf8")
+        resp = Rest().get(url, username=username, password=password, **kwargs)
         result = None
-        if resp['status'] != '200':
+        if resp.status_code != 200:
             self._processCommonErrors(resp, url)
         else:
-            result = json.loads(content)
+            result = json.loads(resp.content.decode("utf8"))
         return result
 
     def post(self, url, payload, contentType, username, password, **kwargs):
@@ -96,6 +99,9 @@ class BrowserBinding(Binding):
         if len(self.extArgs) > 0:
             kwargs.update(self.extArgs)
 
+        if type(url) == bytes:
+            url = url.decode("utf8")
+
         result = None
         resp, content = Rest().post(url,
                                     payload,
@@ -106,7 +112,7 @@ class BrowserBinding(Binding):
         if resp['status'] != '200' and resp['status'] != '201':
             self._processCommonErrors(resp, url)
         elif content is not None and content != "":
-            result = json.loads(content)
+            result = json.loads(content.decode("utf8"))
         return result
 
 
@@ -155,7 +161,7 @@ class RepositoryService(RepositoryServiceIfc):
         # instantiate a Repository object with the first workspace
         # element we find
         repository = None
-        for repo in result.itervalues():
+        for repo in result.values():
             repository = BrowserRepository(client, repo)
         return repository
 
@@ -221,7 +227,7 @@ class BrowserCmisObject(object):
         # if a returnVersion arg was passed in, it is possible we got back
         # a different object ID than the value we started with, so it needs
         # to be cleared out as well
-        if self._extArgs.has_key('returnVersion'):
+        if 'returnVersion' in self._extArgs.keys():
             self._objectId = None
 
     def getObjectId(self):
@@ -294,7 +300,7 @@ class BrowserCmisObject(object):
 
         if self._allowableActions == {}:
             self.reload(includeAllowableActions=True)
-            assert self.data.has_key('allowableActions'), "Expected object data to have an allowableActions key"
+            assert 'allowableActions' in self.data.keys(), "Expected object data to have an allowableActions key"
             allowableActions = self.data['allowableActions']
             self._allowableActions = allowableActions
 
@@ -325,7 +331,7 @@ class BrowserCmisObject(object):
         if self._properties == {}:
             if self.data is None:
                 self.reload()
-            for prop in self.data['properties'].itervalues():
+            for prop in self.data['properties'].values():
                 # property could be multi-valued
                 if type(prop['value']) is list:
                     propVal = []
@@ -565,7 +571,7 @@ class BrowserCmisObject(object):
         >>> acl.getEntries()
         {u'GROUP_EVERYONE': <cmislib.model.ACE object at 0x10071a8d0>, 'jdoe': <cmislib.model.ACE object at 0x10071a590>}
         """
-        if self._repository.getCapabilities()['ACL'] == 'manage':
+        if self._repository.getCapabilities().get('ACL') == 'manage':
             # if the ACL capability is manage, this must be
             # supported
             # but it also depends on the canApplyACL allowable action
@@ -678,7 +684,7 @@ class BrowserRepository(object):
         if self._repositoryId is None:
             if self.data is None:
                 self.reload()
-            self._repositoryId = self.data['repositoryId']
+            self._repositoryId = self.data.get('repositoryId')
         return self._repositoryId
 
     def getRepositoryName(self):
@@ -706,7 +712,7 @@ class BrowserRepository(object):
         u'Main Repository'
         >>> info = repo.getRepositoryInfo()
         >>> for k,v in info.items():
-        ...     print "%s:%s" % (k,v)
+        ...     print("%s:%s" % (k,v))
         ...
         cmisSpecificationTitle:Version 1.0 Committee Draft 04
         cmisVersionSupported:1.0
@@ -732,9 +738,9 @@ class BrowserRepository(object):
                         'changesOnType': self.data['changesOnType'],
                         'principalIdAnonymous': self.data['principalIdAnonymous'],
                         'principalIdAnyone': self.data['principalIdAnyone']}
-            if self.data.has_key('thinClientURI'):
+            if 'thinClientURI' in self.data.keys():
                 repoInfo['thinClientURI'] = self.data['thinClientURI']
-            if self.data.has_key('extendedFeatures'):
+            if 'extendedFeatures' in self.data.keys():
                 repoInfo['extendedFeatures'] = self.data['extendedFeatures']
             self._repositoryInfo = repoInfo
         return self._repositoryInfo
@@ -789,14 +795,14 @@ class BrowserRepository(object):
         u'both'
         """
 
-        if not self.getCapabilities()['ACL']:
+        if not self.getCapabilities().get('ACL'):
             raise NotSupportedException(messages.NO_ACL_SUPPORT)
 
         if not self._permissions:
             if self.data is None:
                 self.reload()
-            if self.data.has_key('aclCapabilities'):
-                if self.data['aclCapabilities'].has_key('supportedPermissions'):
+            if 'aclCapabilities' in self.data.keys():
+                if 'supportedPermissions' in self.data['aclCapabilities'].keys():
                     self._permissions = self.data['aclCapabilities']['supportedPermissions']
         return self._permissions
 
@@ -824,7 +830,7 @@ class BrowserRepository(object):
         cmis:read
         cmis:write
         """
-        if not self.getCapabilities()['ACL']:
+        if not self.getCapabilities().get('ACL'):
             raise NotSupportedException(messages.NO_ACL_SUPPORT)
 
         permData = self.data['aclCapabilities']['permissions']
@@ -859,7 +865,7 @@ class BrowserRepository(object):
         cmis:all
         {http://www.alfresco.org/model/content/1.0}lockable.CheckIn
         """
-        if not self.getCapabilities()['ACL']:
+        if not self.getCapabilities().get('ACL'):
             raise NotSupportedException(messages.NO_ACL_SUPPORT)
 
         permData = self.data['aclCapabilities']['permissionMapping']
@@ -881,7 +887,7 @@ class BrowserRepository(object):
         >>> repo.propagation
         u'propagate'
         """
-        if not self.getCapabilities()['ACL']:
+        if not self.getCapabilities().get('ACL'):
             raise NotSupportedException(messages.NO_ACL_SUPPORT)
 
         return self.data['aclCapabilities']['propagation']
@@ -893,7 +899,7 @@ class BrowserRepository(object):
 
         >>> caps = repo.getCapabilities()
         >>> for k,v in caps.items():
-        ...     print "%s:%s" % (k,v)
+        ...     print("%s:%s" % (k,v))
         ...
         PWCUpdatable:True
         VersionSpecificFiling:False
@@ -915,7 +921,7 @@ class BrowserRepository(object):
             if self.data is None:
                 self.reload()
             caps = {}
-            if self.data.has_key('capabilities'):
+            if 'capabilities' in self.data.keys():
                 for cap in self.data['capabilities'].keys():
                     key = cap.replace('capability', '')
                     caps[key] = self.data['capabilities'][cap]
@@ -932,7 +938,7 @@ class BrowserRepository(object):
         """
 
         # get the root folder id
-        rootFolderId = self.getRepositoryInfo()['rootFolderId']
+        rootFolderId = self.getRepositoryInfo().get('rootFolderId')
         # instantiate a Folder object using the ID
         folder = BrowserFolder(self._cmisClient, self, rootFolderId)
         # return it
@@ -1043,7 +1049,7 @@ class BrowserRepository(object):
             typesUrl += "&typeId=%s" % (safe_quote(typeId))
         if depth is not None:
             typesUrl += "&depth=%s" % (depth)
-        print typesUrl
+        print(typesUrl)
 
         result = self._cmisClient.binding.get(typesUrl,
                                               self._cmisClient.username,
@@ -1264,7 +1270,7 @@ class BrowserRepository(object):
         >>> rs[0].changeTime
         datetime.datetime(2010, 2, 16, 20, 6, 37)
         """
-        if self.getCapabilities()['Changes'] is None:
+        if self.getCapabilities().get('Changes') is None:
             raise NotSupportedException(messages.NO_CHANGE_LOG_SUPPORT)
 
         changesUrl = self.getRepositoryUrl() + "?cmisselector=contentChanges"
@@ -1302,7 +1308,7 @@ class BrowserRepository(object):
         # if you didn't pass in a parent folder
         if parentFolder is None:
             # if the repository doesn't require fileable objects to be filed
-            if self.getCapabilities()['Unfiling']:
+            if self.getCapabilities().get('Unfiling'):
                 # has not been implemented
                 # postUrl = self.getCollectionLink(UNFILED_COLL)
                 raise NotImplementedError
@@ -1310,7 +1316,7 @@ class BrowserRepository(object):
                 # this repo requires fileable objects to be filed
                 raise InvalidArgumentException
 
-        return parentFolder.createDocument(name, properties, StringIO.StringIO(contentString),
+        return parentFolder.createDocument(name, properties, io.StringIO(contentString),
                                            contentType, contentEncoding)
 
     def createDocument(self,
@@ -1348,7 +1354,7 @@ class BrowserRepository(object):
         # if you didn't pass in a parent folder
         if parentFolder is None:
             # if the repository doesn't require fileable objects to be filed
-            if self.getCapabilities()['Unfiling']:
+            if self.getCapabilities().get('Unfiling'):
                 # has not been implemented
                 raise NotImplementedError
             else:
@@ -1364,7 +1370,7 @@ class BrowserRepository(object):
                  "propertyValue[0]": name}
 
         props["propertyId[1]"] = "cmis:objectTypeId"
-        if properties.has_key('cmis:objectTypeId'):
+        if 'cmis:objectTypeId' in properties.keys():
             props["propertyValue[1]"] = properties['cmis:objectTypeId']
             del properties['cmis:objectTypeId']
         else:
@@ -1805,7 +1811,7 @@ class BrowserDocument(BrowserCmisObject):
         """
         # TODO implement optional arguments
         # major = true is supposed to be the default but inmemory 0.9 is throwing an error 500 without it
-        if not kwargs.has_key('major'):
+        if 'major' not in kwargs.keys():
             kwargs['major'] = 'true'
         else:
             kwargs['major'] = 'false'
@@ -1861,7 +1867,7 @@ class BrowserDocument(BrowserCmisObject):
         """
 
         doc = None
-        if kwargs.has_key('major') and kwargs['major'] == 'true':
+        if 'major' in kwargs.keys() and kwargs['major'] == 'true':
             doc = self._repository.getObject(self.getObjectId(), returnVersion='latestmajor')
         else:
             doc = self._repository.getObject(self.getObjectId(), returnVersion='latest')
@@ -1922,17 +1928,19 @@ class BrowserDocument(BrowserCmisObject):
         The optional streamId argument is not yet supported.
         """
 
-        if not self.getAllowableActions()['canGetContentStream']:
+        if not self.getAllowableActions().get('canGetContentStream'):
             return None
 
         contentUrl = self._repository.getRootFolderUrl() + "?objectId=" + self.getObjectId() + "&selector=content"
-        result, content = Rest().get(contentUrl.encode('utf-8'),
+        result = Rest().get(contentUrl.encode('utf-8'),
                                      self._cmisClient.username,
                                      self._cmisClient.password,
                                      **self._cmisClient.extArgs)
-        if result['status'] != '200':
+        if result.status_code != 200:
             raise CmisException(result['status'])
-        return StringIO.StringIO(content)
+        if type(result.content) == bytes:
+            content = result.content.decode("ISO-8859-1")
+        return io.StringIO(content)
 
     def setContentStream(self, contentFile, contentType=None):
 
@@ -1972,7 +1980,7 @@ class BrowserDocument(BrowserCmisObject):
         props = {"objectId": self.id,
                  "cmisaction": "deleteContent"}
 
-        if self.properties.has_key('cmis:changeToken'):
+        if 'cmis:changeToken' in self.properties.keys():
             props["changeToken"] = self.properties['cmis:changeToken']
 
         # invoke the URL
@@ -1997,7 +2005,7 @@ class BrowserDocument(BrowserCmisObject):
         """
 
         # if Renditions capability is None, return notsupported
-        if self._repository.getCapabilities()['Renditions']:
+        if self._repository.getCapabilities().get('Renditions'):
             pass
         else:
             raise NotSupportedException
@@ -2005,14 +2013,14 @@ class BrowserDocument(BrowserCmisObject):
         renditions = []
 
         contentUrl = self._repository.getRootFolderUrl() + "?objectId=" + self.getObjectId() + "&cmisselector=renditions&renditionFilter=*"
-        result, content = Rest().get(contentUrl.encode('utf-8'),
+        result = Rest().get(contentUrl.encode('utf-8'),
                                      self._cmisClient.username,
                                      self._cmisClient.password,
                                      **self._cmisClient.extArgs)
-        if result['status'] != '200':
-            raise CmisException(result['status'])
+        if result.status_code != 200:
+            raise CmisException(result.status_code)
 
-        resultObj = json.loads(content)
+        resultObj = json.loads(result.content)
         for rendObj in resultObj:
             renditions.append(BrowserRendition(rendObj))
 
@@ -2085,7 +2093,7 @@ class BrowserFolder(BrowserCmisObject):
                  "propertyValue[0]": name}
 
         props["propertyId[1]"] = "cmis:objectTypeId"
-        if properties.has_key('cmis:objectTypeId'):
+        if 'cmis:objectTypeId' in properties.keys():
             props["propertyValue[1]"] = properties['cmis:objectTypeId']
             del properties['cmis:objectTypeId']
         else:
@@ -2287,7 +2295,7 @@ class BrowserFolder(BrowserCmisObject):
         """
         The optional filter argument is not yet supported.
         """
-        if self.properties.has_key('cmis:parentId') and self.properties['cmis:parentId'] is not None:
+        if 'cmis:parentId' in self.properties.keys() and self.properties['cmis:parentId'] is not None:
             return BrowserFolder(self._cmisClient, self._repository, objectId=self.properties['cmis:parentId'])
 
     def deleteTree(self, **kwargs):
@@ -2596,7 +2604,7 @@ class BrowserObjectType(ObjectType):
         ...    print 'Open choice:%s' % prop.openChoice
         """
 
-        if self.data is None or not self.data.has_key('propertyDefinitions'):
+        if self.data is None or 'propertyDefinitions' not in self.data.keys():
             self.reload()
         props = {}
         for prop in self.data['propertyDefinitions'].keys():
@@ -2765,7 +2773,7 @@ class BrowserACL(ACL):
         """
 
         result = {}
-        for principalId, ace in self._entries.iteritems():
+        for principalId, ace in self._entries.items():
             result[principalId] = ace.copy()
         return result
 
@@ -2816,7 +2824,7 @@ class BrowserACL(ACL):
         {u'GROUP_EVERYONE': <cmislib.model.ACE object at 0x100731410>, u'jdoe': <cmislib.model.ACE object at 0x100731150>, 'jpotts': <cmislib.model.ACE object at 0x1005a22d0>}
         """
 
-        if self._entries.has_key(principalId):
+        if principalId in self._entries.keys():
             del self._entries[principalId]
 
     def clearEntries(self):
@@ -2888,7 +2896,7 @@ class BrowserACL(ACL):
         entries = self.entries
         originalEntries = self.originalEntries
         removedAces = []
-        for principalId, original in originalEntries.iteritems():
+        for principalId, original in originalEntries.items():
             current = entries.get(principalId)
             if not current:
                 removedAces.append(original.copy())
@@ -2917,7 +2925,7 @@ class BrowserACL(ACL):
         entries = self.entries
         originalEntries = self.originalEntries
         addedAces = []
-        for principalId, current in entries.iteritems():
+        for principalId, current in entries.items():
             original = originalEntries.get(principalId)
             if not original:
                 addedAces.append(current.copy())
@@ -3048,7 +3056,7 @@ class BrowserChangeEntry(ChangeEntry):
         """
         if not self._properties:
             props = self._data.get('properties')
-            for prop in props.itervalues():
+            for prop in props.values():
                 # property could be multi-valued
                 if type(prop['value']) is list:
                     propVal = []
@@ -3204,10 +3212,14 @@ def setProps(properties, props, initialIndex=0):
     for key, val in properties.items():
         props["propertyId[%s]" % i] = key
         if hasattr(val, '__iter__'):
+            print("sto qua")
             j = 0
-            for v in val:
-                props["propertyValue[%s][%s]" % (i, j)] = v
-                j += 1
+            # if type(val) == list:
+            #     for v in val:
+            #         props["propertyValue[%s][%s]" % (i, j)] = v
+            #         j += 1
+            # else:
+            props["propertyValue[%s]" % i] = val
         else:
             props["propertyValue[%s]" % i] = val
         i += 1
@@ -3253,7 +3265,7 @@ def encode_multipart_formdata(fields, contentFile, contentType):
     L = []
     fileName = None
     if fields:
-        for (key, value) in fields.iteritems():
+        for (key, value) in fields.items():
             if key == 'cmis:name':
                 fileName = value
             L.append('--' + boundary)

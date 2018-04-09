@@ -23,9 +23,11 @@ not know anything about CMIS or do anything special with regard to the
 response it receives.
 """
 
-from urllib import urlencode
+from urllib.parse import urlencode
 import logging
 import httplib2
+import requests
+from requests.auth import HTTPBasicAuth
 
 
 class RESTService(object):
@@ -53,18 +55,17 @@ class RESTService(object):
                 headers = kwargs['headers']
                 del kwargs['headers']
                 self.logger.debug('Headers passed in: %s', headers)
+            if type(url) == bytes:
+                url = url.decode("utf8")
             if url.find('?') >= 0:
                 url = url + '&' + urlencode(kwargs)
             else:
                 url = url + '?' + urlencode(kwargs)
 
-        self.logger.debug('About to do a GET on:' + url)
+        self.logger.debug('About to do a GET on:' + str(url))
 
-        h = httplib2.Http()
-        h.add_credentials(username, password)
         headers['User-Agent'] = self.user_agent
-
-        return h.request(url, method='GET', headers=headers)
+        return requests.get(url, verify=False, headers=headers, auth=HTTPBasicAuth(username, password))
 
     def delete(self, url, username=None, password=None, **kwargs):
 
@@ -83,11 +84,8 @@ class RESTService(object):
 
         self.logger.debug('About to do a DELETE on:' + url)
 
-        h = httplib2.Http()
-        h.add_credentials(username, password)
         headers['User-Agent'] = self.user_agent
-
-        return h.request(url, method='DELETE', headers=headers)
+        return requests.delete(url, verify=False, headers=headers, auth=HTTPBasicAuth(username, password))
 
     def put(self,
             url,
@@ -116,7 +114,7 @@ class RESTService(object):
 
         self.logger.debug('About to do a PUT on:' + url)
 
-        h = httplib2.Http()
+        h = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
         h.add_credentials(username, password)
         headers['User-Agent'] = self.user_agent
         if contentType is not None:
@@ -150,7 +148,7 @@ class RESTService(object):
 
         self.logger.debug('About to do a POST on:' + url)
 
-        h = httplib2.Http()
+        h = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
         h.add_credentials(username, password)
         headers['User-Agent'] = self.user_agent
         if contentType is not None:

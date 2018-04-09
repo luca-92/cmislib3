@@ -49,22 +49,22 @@ class Binding(object):
         here. Callers should handle the rest.
         """
 
-        if error['status'] == '401':
-            raise PermissionDeniedException(error['status'], url)
-        elif error['status'] == '400':
-            raise InvalidArgumentException(error['status'], url)
-        elif error['status'] == '404':
-            raise ObjectNotFoundException(error['status'], url)
-        elif error['status'] == '403':
-            raise PermissionDeniedException(error['status'], url)
-        elif error['status'] == '405':
-            raise NotSupportedException(error['status'], url)
-        elif error['status'] == '409':
-            raise UpdateConflictException(error['status'], url)
-        elif error['status'] == '500':
-            raise RuntimeException(error['status'], url)
+        if error.status_code == 401:
+            raise PermissionDeniedException(error.status_code, url)
+        elif error.status_code == 400:
+            raise InvalidArgumentException(error.status_code, url)
+        elif error.status_code == 404:
+            raise ObjectNotFoundException(error.status_code, url)
+        elif error.status_code == 403:
+            raise PermissionDeniedException(error.status_code, url)
+        elif error.status_code == 405:
+            raise NotSupportedException(error.status_code, url)
+        elif error.status_code == 409:
+            raise UpdateConflictException(error.status_code, url)
+        elif error.status_code == 500:
+            raise RuntimeException(error.status_code, url)
         else:
-            raise CmisException(error['status'], url)
+            raise CmisException(error.status_code, url)
 
 
 class RepositoryServiceIfc(object):

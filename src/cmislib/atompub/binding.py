@@ -21,6 +21,8 @@
 Module containing the Atom Pub binding-specific objects used to work with a CMIS
 provider.
 """
+import io
+
 from cmislib.cmis_services import Binding, RepositoryServiceIfc
 from cmislib.domain import CmisId, CmisObject, ObjectType, Property, ACL, ACE, ChangeEntry, ResultSet, Rendition
 from cmislib import messages
@@ -30,13 +32,13 @@ from cmislib.exceptions import CmisException, \
     NotSupportedException
 from cmislib.util import multiple_replace, parsePropValue, parseBoolValue, toCMISValue, parseDateTimeValue, safe_quote
 
-from urllib import quote
-from urlparse import urlparse, urlunparse
+from urllib.parse import quote
+from urllib.parse import urlparse, urlunparse
 import re
 import mimetypes
 from xml.parsers.expat import ExpatError
 import datetime
-import StringIO
+from io import StringIO
 import logging
 from xml.dom import minidom
 
@@ -116,16 +118,13 @@ class AtomPubBinding(Binding):
         if len(self.extArgs) > 0:
             kwargs.update(self.extArgs)
 
-        resp, content = Rest().get(url,
-                                   username=username,
-                                   password=password,
-                                   **kwargs)
-        if resp['status'] != '200':
+        resp = Rest().get(url, username=username, password=password, **kwargs)
+        if resp.status_code != 200:
             self._processCommonErrors(resp, url)
-            return content
+            return resp.content
         else:
             try:
-                return minidom.parseString(content)
+                return minidom.parseString(resp.content)
             except ExpatError:
                 raise CmisException('Could not parse server response', url)
 
@@ -143,13 +142,11 @@ class AtomPubBinding(Binding):
         if len(self.extArgs) > 0:
             kwargs.update(self.extArgs)
 
-        resp, content = Rest().delete(url,
-                                      username=username,
-                                      password=password,
+        resp = Rest().delete(url, username=username,       password=password,
                                       **kwargs)
-        if resp['status'] != '200' and resp['status'] != '204':
+        if resp.status_code != 200 and resp.status_code != 204:
             self._processCommonErrors(resp, url)
-            return content
+            return resp.content
         else:
             pass
 
@@ -168,20 +165,15 @@ class AtomPubBinding(Binding):
         if len(self.extArgs) > 0:
             kwargs.update(self.extArgs)
 
-        resp, content = Rest().post(url,
-                                    payload,
-                                    contentType,
-                                    username=username,
-                                    password=password,
-                                    **kwargs)
-        if resp['status'] == '200':
+        resp = Rest().post(url, payload, contentType, username=username, password=password, **kwargs)
+        if resp.status_code == 200:
             try:
-                return minidom.parseString(content)
+                return minidom.parseString(resp.content)
             except ExpatError:
                 raise CmisException('Could not parse server response', url)
-        elif resp['status'] == '201':
+        elif resp.status_code == 201:
             try:
-                return minidom.parseString(content)
+                return minidom.parseString(resp.content)
             except ExpatError:
                 raise CmisException('Could not parse server response', url)
         else:
@@ -203,18 +195,13 @@ class AtomPubBinding(Binding):
         if len(self.extArgs) > 0:
             kwargs.update(self.extArgs)
 
-        resp, content = Rest().put(url,
-                                   payload,
-                                   contentType,
-                                   username=username,
-                                   password=password,
-                                   **kwargs)
-        if resp['status'] != '200' and resp['status'] != '201':
+        resp = Rest().put(url, payload, contentType, username=username, password=password, **kwargs)
+        if resp.status_code != 200 and resp.status_code != 201:
             self._processCommonErrors(resp, url)
-            return content
+            return resp.content
         else:
             try:
-                return minidom.parseString(content)
+                return minidom.parseString(resp.content)
             except ExpatError:
                 # This may happen and is normal
                 return None
@@ -391,7 +378,7 @@ class AtomPubCmisObject(CmisObject):
         # if a returnVersion arg was passed in, it is possible we got back
         # a different object ID than the value we started with, so it needs
         # to be cleared out as well
-        if options.has_key('returnVersion') or addOptions.has_key('returnVersion'):
+        if 'returnVersion' in options.keys() or 'returnVersion' in addOptions.keys():
             self._objectId = None
 
     def _initData(self):
@@ -483,7 +470,7 @@ class AtomPubCmisObject(CmisObject):
         renditions = []
         for linkElement in linkElements:
 
-            if linkElement.attributes.has_key('rel'):
+            if 'rel' in linkElement.attributes.keys():
                 relAttr = linkElement.attributes['rel'].value
 
                 if relAttr == RENDITION_REL:
@@ -497,7 +484,7 @@ class AtomPubCmisObject(CmisObject):
 
         >>> actions = doc.getAllowableActions()
         >>> for a in actions:
-        ...     print "%s:%s" % (a,actions[a])
+        ...     print("%s:%s" % (a,actions[a]))
         ...
         canDeleteContentStream:True
         canSetContentStream:True
@@ -545,7 +532,7 @@ class AtomPubCmisObject(CmisObject):
 
         >>> props = doc.getProperties()
         >>> for p in props:
-        ...     print "%s: %s" % (p, props[p])
+        ...     print("%s: %s" % (p, props[p]))
         ...
         cmis:contentStreamMimeType: text/html
         cmis:creationDate: 2009-12-15T09:45:35.369-06:00
@@ -635,16 +622,15 @@ class AtomPubCmisObject(CmisObject):
 
         # get the self link
         selfUrl = self._getSelfLink()
-
         # if we have a change token, we must pass it back, per the spec
         args = {}
-        if self.properties.has_key('cmis:changeToken') and self.properties['cmis:changeToken'] is not None:
+        if 'cmis:changeToken' in self.properties.keys() and self.properties.get('cmis:changeToken') is not None:
             self.logger.debug('Change token present, adding it to args')
             args = {"changeToken": self.properties['cmis:changeToken']}
 
         # the getEntryXmlDoc function may need the object type
         objectTypeId = None
-        if self.properties.has_key('cmis:objectTypeId') and not properties.has_key('cmis:objectTypeId'):
+        if 'cmis:objectTypeId' in self.properties.keys() and not 'cmis:objectTypeId' in properties.keys():
             objectTypeId = self.properties['cmis:objectTypeId']
             self.logger.debug('This object type is:%s', objectTypeId)
 
@@ -830,7 +816,7 @@ class AtomPubCmisObject(CmisObject):
         The optional onlyBasicPermissions argument is currently not supported.
         """
 
-        if self._repository.getCapabilities()['ACL']:
+        if self._repository.getCapabilities().get('ACL'):
             # if the ACL capability is discover or manage, this must be
             # supported
             aclUrl = self._getLink(ACL_REL)
@@ -854,7 +840,7 @@ class AtomPubCmisObject(CmisObject):
         {u'GROUP_EVERYONE': <cmislib.model.ACE object at 0x10071a8d0>, 'jdoe': <cmislib.model.ACE object at 0x10071a590>}
         """
 
-        if self._repository.getCapabilities()['ACL'] == 'manage':
+        if self._repository.getCapabilities().get('ACL') == 'manage':
             # if the ACL capability is manage, this must be
             # supported
             # but it also depends on the canApplyACL allowable action
@@ -898,16 +884,16 @@ class AtomPubCmisObject(CmisObject):
         for linkElement in linkElements:
 
             if ltype:
-                if linkElement.attributes.has_key('rel'):
+                if 'rel' in linkElement.attributes.keys():
                     relAttr = linkElement.attributes['rel'].value
 
-                    if ltype and linkElement.attributes.has_key('type'):
+                    if ltype and 'type' in linkElement.attributes.keys():
                         typeAttr = linkElement.attributes['type'].value
 
                         if relAttr == rel and ltype.match(typeAttr):
                             return linkElement.attributes['href'].value
             else:
-                if linkElement.attributes.has_key('rel'):
+                if 'rel' in linkElement.attributes.keys():
                     relAttr = linkElement.attributes['rel'].value
 
                     if relAttr == rel:
@@ -1000,7 +986,7 @@ class AtomPubRepository(object):
         u'both'
         """
 
-        if not self.getCapabilities()['ACL']:
+        if not self.getCapabilities().get('ACL'):
             raise NotSupportedException(messages.NO_ACL_SUPPORT)
 
         if not self._permissions:
@@ -1037,7 +1023,7 @@ class AtomPubRepository(object):
         cmis:write
         """
 
-        if not self.getCapabilities()['ACL']:
+        if not self.getCapabilities().get('ACL'):
             raise NotSupportedException(messages.NO_ACL_SUPPORT)
 
         if self._permDefs == {}:
@@ -1086,7 +1072,7 @@ class AtomPubRepository(object):
         {http://www.alfresco.org/model/content/1.0}lockable.CheckIn
         """
 
-        if not self.getCapabilities()['ACL']:
+        if not self.getCapabilities().get('ACL'):
             raise NotSupportedException(messages.NO_ACL_SUPPORT)
 
         if self._permMap == {}:
@@ -1124,7 +1110,7 @@ class AtomPubRepository(object):
         u'propagate'
         """
 
-        if not self.getCapabilities()['ACL']:
+        if not self.getCapabilities().get('ACL'):
             raise NotSupportedException(messages.NO_ACL_SUPPORT)
 
         if not self._propagation:
@@ -1255,7 +1241,7 @@ class AtomPubRepository(object):
         u'workspace://SpacesStore/aa1ecedf-9551-49c5-831a-0502bb43f348'
         """
         # get the root folder id
-        rootFolderId = self.getRepositoryInfo()['rootFolderId']
+        rootFolderId = self.getRepositoryInfo().get('rootFolderId')
         # instantiate a Folder object using the ID
         folder = AtomPubFolder(self._cmisClient, self, rootFolderId)
         # return it
@@ -1692,7 +1678,7 @@ class AtomPubRepository(object):
         datetime.datetime(2010, 2, 16, 20, 6, 37)
         """
 
-        if self.getCapabilities()['Changes'] is None:
+        if self.getCapabilities().get('Changes') is None:
             raise NotSupportedException(messages.NO_CHANGE_LOG_SUPPORT)
 
         changesUrl = self.getLink(CHANGE_LOG_REL)
@@ -1727,7 +1713,7 @@ class AtomPubRepository(object):
         # if you didn't pass in a parent folder
         if parentFolder is None:
             # if the repository doesn't require fileable objects to be filed
-            if self.getCapabilities()['Unfiling']:
+            if self.getCapabilities().get('Unfiling'):
                 # has not been implemented
                 # postUrl = self.getCollectionLink(UNFILED_COLL)
                 raise NotImplementedError
@@ -1774,7 +1760,7 @@ class AtomPubRepository(object):
         # if you didn't pass in a parent folder
         if parentFolder is None:
             # if the repository doesn't require fileable objects to be filed
-            if self.getCapabilities()['Unfiling']:
+            if self.getCapabilities().get('Unfiling'):
                 # has not been implemented
                 # postUrl = self.getCollectionLink(UNFILED_COLL)
                 raise NotImplementedError
@@ -1789,7 +1775,7 @@ class AtomPubRepository(object):
 
         # hardcoding to cmis:document if it wasn't
         # passed in via props
-        if not properties.has_key('cmis:objectTypeId'):
+        if 'cmis:objectTypeId' not in properties.keys():
             properties['cmis:objectTypeId'] = CmisId('cmis:document')
         # and if it was passed in, making sure it is a CmisId
         elif not isinstance(properties['cmis:objectTypeId'], CmisId):
@@ -2047,7 +2033,7 @@ class AtomPubResultSet(ResultSet):
 
         for linkElement in linkElements:
 
-            if linkElement.attributes.has_key('rel'):
+            if 'rel' in linkElement.attributes.keys():
                 relAttr = linkElement.attributes['rel'].value
 
                 if relAttr == rel:
@@ -2337,7 +2323,7 @@ class AtomPubDocument(AtomPubCmisObject):
         # reloading the document just to make sure we've got the latest
         # and greatest PWC ID
         self.reload()
-        pwcDocId = self.getProperties()['cmis:versionSeriesCheckedOutId']
+        pwcDocId = self.getProperties().get('cmis:versionSeriesCheckedOutId')
         if pwcDocId:
             return self._repository.getObject(pwcDocId)
 
@@ -2356,7 +2342,7 @@ class AtomPubDocument(AtomPubCmisObject):
         # reloading the document just to make sure we've got the latest
         # and greatest checked out prop
         self.reload()
-        return parseBoolValue(self.getProperties()['cmis:isVersionSeriesCheckedOut'])
+        return parseBoolValue(self.getProperties().get('cmis:isVersionSeriesCheckedOut'))
 
     def getCheckedOutBy(self):
 
@@ -2370,7 +2356,7 @@ class AtomPubDocument(AtomPubCmisObject):
         # reloading the document just to make sure we've got the latest
         # and greatest checked out prop
         self.reload()
-        return self.getProperties()['cmis:versionSeriesCheckedOutBy']
+        return self.getProperties().get('cmis:versionSeriesCheckedOutBy')
 
     def checkin(self, checkinComment=None, contentFile=None, contentType=None,
                 properties=None, **kwargs):
@@ -2396,7 +2382,7 @@ class AtomPubDocument(AtomPubCmisObject):
         """
 
         # major = true is supposed to be the default but inmemory 0.9 is throwing an error 500 without it
-        if not kwargs.has_key('major'):
+        if 'major' not in kwargs.keys():
             kwargs['major'] = 'true'
 
         # Add checkin to kwargs and checkinComment, if it exists
@@ -2409,7 +2395,7 @@ class AtomPubDocument(AtomPubCmisObject):
         else:
             # the getEntryXmlDoc function may need the object type
             objectTypeId = None
-            if self.properties.has_key('cmis:objectTypeId') and not properties.has_key('cmis:objectTypeId'):
+            if 'cmis:objectTypeId' in self.properties.keys() and 'cmis:objectTypeId' not in properties.keys():
                 objectTypeId = self.properties['cmis:objectTypeId']
                 self.logger.debug('This object type is:%s', objectTypeId)
 
@@ -2456,7 +2442,7 @@ class AtomPubDocument(AtomPubCmisObject):
         """
 
         doc = None
-        if kwargs.has_key('major') and kwargs['major'] == 'true':
+        if 'major' in kwargs.keys() and kwargs['major'] == 'true':
             doc = self._repository.getObject(self.getObjectId(), returnVersion='latestmajor')
         else:
             doc = self._repository.getObject(self.getObjectId(), returnVersion='latest')
@@ -2529,17 +2515,17 @@ class AtomPubDocument(AtomPubCmisObject):
         assert(len(contentElements) == 1), 'Expected to find exactly one atom:content element.'
 
         # if the src element exists, follow that
-        if contentElements[0].attributes.has_key('src'):
+        if 'src' in contentElements[0].attributes.keys():
             srcUrl = contentElements[0].attributes['src'].value
 
             # the cmis client class parses non-error responses
-            result, content = Rest().get(srcUrl.encode('utf-8'),
+            result = Rest().get(srcUrl.encode('utf-8'),
                                          username=self._cmisClient.username,
                                          password=self._cmisClient.password,
                                          **self._cmisClient.extArgs)
-            if result['status'] != '200':
+            if result.status_code != 200:
                 raise CmisException(result['status'])
-            return StringIO.StringIO(content)
+            return io.StringIO(result.content)
         else:
             # otherwise, try to return the value of the content element
             if contentElements[0].childNodes:
@@ -2560,7 +2546,7 @@ class AtomPubDocument(AtomPubCmisObject):
         assert(len(contentElements) == 1), 'Expected to find exactly one atom:content element.'
 
         # if the src element exists, follow that
-        if contentElements[0].attributes.has_key('src'):
+        if 'src' in contentElements[0].attributes.keys():
             srcUrl = contentElements[0].attributes['src'].value
 
         # there may be times when this URL is absent, but I'm not sure how to
@@ -2577,7 +2563,7 @@ class AtomPubDocument(AtomPubCmisObject):
 
         # if we have a change token, we must pass it back, per the spec
         args = {}
-        if self.properties.has_key('cmis:changeToken') and self.properties['cmis:changeToken'] is not None:
+        if 'cmis:changeToken' in self.properties.keys() and self.properties['cmis:changeToken'] is not None:
             self.logger.debug('Change token present, adding it to args')
             args = {"changeToken": self.properties['cmis:changeToken']}
 
@@ -2607,7 +2593,7 @@ class AtomPubDocument(AtomPubCmisObject):
         assert(len(contentElements) == 1), 'Expected to find exactly one atom:content element.'
 
         # if the src element exists, follow that
-        if contentElements[0].attributes.has_key('src'):
+        if 'src' in contentElements[0].attributes.keys():
             srcUrl = contentElements[0].attributes['src'].value
 
         # there may be times when this URL is absent, but I'm not sure how to
@@ -2616,7 +2602,7 @@ class AtomPubDocument(AtomPubCmisObject):
 
         # if we have a change token, we must pass it back, per the spec
         args = {}
-        if self.properties.has_key('cmis:changeToken') and self.properties['cmis:changeToken'] is not None:
+        if 'cmis:changeToken' in self.properties.keys() and self.properties['cmis:changeToken'] is not None:
             self.logger.debug('Change token present, adding it to args')
             args = {"changeToken": self.properties['cmis:changeToken']}
 
@@ -2698,7 +2684,7 @@ class AtomPubFolder(AtomPubCmisObject):
         properties['cmis:name'] = name
 
         # hardcoding to cmis:folder if it wasn't passed in via props
-        if not properties.has_key('cmis:objectTypeId'):
+        if 'cmis:objectTypeId' not in properties.keys():
             properties['cmis:objectTypeId'] = CmisId('cmis:folder')
         # and checking to make sure the object type ID is an instance of CmisId
         elif not isinstance(properties['cmis:objectTypeId'], CmisId):
@@ -2887,7 +2873,7 @@ class AtomPubFolder(AtomPubCmisObject):
 
         """
 
-        if not self._repository.getCapabilities()['GetDescendants']:
+        if not self._repository.getCapabilities().get('GetDescendants'):
             raise NotSupportedException('This repository does not support getDescendants')
 
         # default the depth to -1, which is all descendants
@@ -2978,7 +2964,7 @@ class AtomPubFolder(AtomPubCmisObject):
 
         # Per the spec, the repo must have the GetDescendants capability
         # to support deleteTree
-        if not self._repository.getCapabilities()['GetDescendants']:
+        if not self._repository.getCapabilities().get('GetDescendants'):
             raise NotSupportedException('This repository does not support deleteTree')
 
         # Get the descendants link and do a DELETE against it
@@ -3011,7 +2997,7 @@ class AtomPubFolder(AtomPubCmisObject):
          - allVersions
         """
 
-        if not self._repository.getCapabilities()['Multifiling']:
+        if not self._repository.getCapabilities().get('Multifiling'):
             raise NotSupportedException('This repository does not support multifiling')
 
         postUrl = self.getChildrenLink()
@@ -3031,7 +3017,7 @@ class AtomPubFolder(AtomPubCmisObject):
         support unfiling for this to work.
         """
 
-        if not self._repository.getCapabilities()['Unfiling']:
+        if not self._repository.getCapabilities().get('Unfiling'):
             raise NotSupportedException('This repository does not support unfiling')
 
         postUrl = self._repository.getCollectionLink(UNFILED_COLL)
@@ -3247,7 +3233,7 @@ class AtomPubObjectType(ObjectType):
 
         for linkElement in linkElements:
 
-            if linkElement.attributes.has_key('rel') and linkElement.attributes.has_key('type'):
+            if 'rel' in linkElement.attributes.keys() and 'type' in linkElement.attributes.keys():
                 relAttr = linkElement.attributes['rel'].value
                 typeAttr = linkElement.attributes['type'].value
 
@@ -3478,7 +3464,7 @@ class AtomPubACL(ACL):
         if not self._entries:
             self._entries = {ace.principalId: ace}
         else:
-            if self._entries.has_key(principalId):
+            if principalId in self._entries.keys():
                 if access not in self._entries[principalId].permissions:
                     perms = self._entries[principalId].permissions
                     perms.append(access)
@@ -3504,7 +3490,7 @@ class AtomPubACL(ACL):
         {u'GROUP_EVERYONE': <cmislib.model.ACE object at 0x100731410>, u'jdoe': <cmislib.model.ACE object at 0x100731150>, 'jpotts': <cmislib.model.ACE object at 0x1005a22d0>}
         """
 
-        if self._entries.has_key(principalId):
+        if principalId in self._entries.keys():
             del self._entries[principalId]
             if len(self._entries) == 0:
                 self.clearEntries()
@@ -3787,7 +3773,7 @@ class AtomPubChangeEntry(ChangeEntry):
         linkElements = self._xmlDoc.getElementsByTagNameNS(ATOM_NS, 'link')
 
         for linkElement in linkElements:
-            if linkElement.attributes.has_key('rel'):
+            if 'rel' in linkElement.attributes.keys():
                 relAttr = linkElement.attributes['rel'].value
 
                 if relAttr == rel:
@@ -3871,22 +3857,22 @@ class AtomPubRendition(Rendition):
 
     def getStreamId(self):
         """Getter for the rendition's stream ID"""
-        if self.xmlDoc.attributes.has_key('streamId'):
+        if 'streamId' in self.xmlDoc.attributes.keys():
             return self.xmlDoc.attributes['streamId'].value
 
     def getMimeType(self):
         """Getter for the rendition's mime type"""
-        if self.xmlDoc.attributes.has_key('type'):
+        if 'type' in self.xmlDoc.attributes.keys():
             return self.xmlDoc.attributes['type'].value
 
     def getLength(self):
         """Getter for the renditions's length"""
-        if self.xmlDoc.attributes.has_key('length'):
+        if 'length' in self.xmlDoc.attributes.keys():
             return self.xmlDoc.attributes['length'].value
 
     def getTitle(self):
         """Getter for the renditions's title"""
-        if self.xmlDoc.attributes.has_key('title'):
+        if 'title' in self.xmlDoc.attributes.keys():
             return self.xmlDoc.attributes['title'].value
 
     def getKind(self):
@@ -3896,22 +3882,22 @@ class AtomPubRendition(Rendition):
 
     def getHeight(self):
         """Getter for the renditions's height"""
-        if self.xmlDoc.attributes.has_key('height'):
+        if 'height' in self.xmlDoc.attributes.keys():
             return self.xmlDoc.attributes['height'].value
 
     def getWidth(self):
         """Getter for the renditions's width"""
-        if self.xmlDoc.attributes.has_key('width'):
+        if 'width' in self.xmlDoc.attributes.keys():
             return self.xmlDoc.attributes['width'].value
 
     def getHref(self):
         """Getter for the renditions's href"""
-        if self.xmlDoc.attributes.has_key('href'):
+        if 'href' in self.xmlDoc.attributes.keys():
             return self.xmlDoc.attributes['href'].value
 
     def getRenditionDocumentId(self):
         """Getter for the renditions's width"""
-        if self.xmlDoc.attributes.has_key('renditionDocumentId'):
+        if 'renditionDocumentId' in self.xmlDoc.attributes.keys():
             return self.xmlDoc.attributes['renditionDocumentId'].value
 
     streamId = property(getStreamId)
@@ -4021,7 +4007,7 @@ def getEntryXmlDoc(repo=None, objectTypeId=None, properties=None, contentFile=No
 
     if properties:
         # a name is required for most things, but not for a checkout
-        if properties.has_key('cmis:name'):
+        if 'cmis:name' in properties.keys():
             titleElement = entryXmlDoc.createElementNS(ATOM_NS, "title")
             titleText = entryXmlDoc.createTextNode(properties['cmis:name'])
             titleElement.appendChild(titleText)
@@ -4113,12 +4099,12 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             propValueStrList = []
             for val in propValue:
                 if val is not None:
-                    propValueStrList.append(unicode(val).lower())
+                    propValueStrList.append(val.decode("utf8").lower())
                 else:
                     propValueStrList.append(val)
         else:
             if propValue is not None:
-                propValueStrList = [unicode(propValue).lower()]
+                propValueStrList = [propValue.decode("utf8").lower()]
             else:
                 propValueStrList = [propValue]
     elif propType == 'integer' or propType == int:
@@ -4127,12 +4113,12 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             propValueStrList = []
             for val in propValue:
                 if val is not None:
-                    propValueStrList.append(unicode(val))
+                    propValueStrList.append(val.decode("utf8"))
                 else:
                     propValueStrList.append(val)
         else:
             if propValue is not None:
-                propValueStrList = [unicode(propValue)]
+                propValueStrList = [propValue.decode("utf8")]
             else:
                 propValueStrList = [propValue]
     elif propType == 'decimal' or propType == float:
@@ -4141,12 +4127,12 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             propValueStrList = []
             for val in propValue:
                 if val is not None:
-                    propValueStrList.append(unicode(val))
+                    propValueStrList.append(val.decode("utf8"))
                 else:
                     propValueStrList.append(val)
         else:
             if propValue is not None:
-                propValueStrList = [unicode(propValue)]
+                propValueStrList = [propValue.decode("utf8")]
             else:
                 propValueStrList = [propValue]
     else:
@@ -4155,12 +4141,12 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             propValueStrList = []
             for val in propValue:
                 if val is not None:
-                    propValueStrList.append(unicode(val))
+                    propValueStrList.append(val.decode("utf8"))
                 else:
                     propValueStrList.append(val)
         else:
             if propValue is not None:
-                propValueStrList = [unicode(propValue)]
+                propValueStrList = [propValue.decode("utf8")]
             else:
                 propValueStrList = [propValue]
 
