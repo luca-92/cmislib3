@@ -2,40 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f2b8aa0c-4424-49e1-be47-90c3ed4d0adb" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/.doctrees/about.doctree" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/.doctrees/environment.pickle" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/.doctrees/index.doctree" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/Makefile" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/about.rst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/bindings.rst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/code.rst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/codemisc.rst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/conf.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/devguide.rst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/docs.rst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/examples.rst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/index.rst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/install.rst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/make.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/run-sphinx.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/doc/src/tests.rst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/tests/250px-Cmis_logo.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/tests/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/tests/cmislibtest.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/tests/sample-a.pdf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/tests/settings.py.sample" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/tests/test_browser.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/setup.py" afterPath="$PROJECT_DIR$/setup.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cmislib/__init__.py" afterPath="$PROJECT_DIR$/src/cmislib/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cmislib/atompub/__init__.py" afterPath="$PROJECT_DIR$/src/cmislib/atompub/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cmislib/atompub/binding.py" afterPath="$PROJECT_DIR$/src/cmislib/atompub/binding.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cmislib/browser/__init__.py" afterPath="$PROJECT_DIR$/src/cmislib/browser/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cmislib/browser/binding.py" afterPath="$PROJECT_DIR$/src/cmislib/browser/binding.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cmislib/cmis_services.py" afterPath="$PROJECT_DIR$/src/cmislib/cmis_services.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cmislib/model.py" afterPath="$PROJECT_DIR$/src/cmislib/model.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cmislib/net.py" afterPath="$PROJECT_DIR$/src/cmislib/net.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cmislib/util.py" afterPath="$PROJECT_DIR$/src/cmislib/util.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -46,68 +13,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="setup.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/setup.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
-              <caret line="35" column="75" lean-forward="false" selection-start-line="35" selection-start-column="75" selection-end-line="35" selection-end-column="75" />
-              <folding>
-                <element signature="e#859#868#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="KEYS" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/KEYS">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-384">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LICENSE.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/LICENSE.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="720">
-              <caret line="145" column="69" lean-forward="true" selection-start-line="145" selection-start-column="69" selection-end-line="145" selection-end-column="69" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MANIFEST.in" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/MANIFEST.in">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="README.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/README.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NOTICE.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/NOTICE.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="messages.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cmislib/messages.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -118,11 +23,23 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="setup.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/setup.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="678">
+              <caret line="43" column="19" lean-forward="true" selection-start-line="43" selection-start-column="19" selection-end-line="43" selection-end-column="19" />
+              <folding>
+                <element signature="e#859#868#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cmislib/model.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1602">
-              <caret line="89" column="0" lean-forward="true" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+              <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
               <folding>
                 <element signature="e#1100#1114#0" expanded="true" />
               </folding>
@@ -134,7 +51,7 @@
         <entry file="file://$PROJECT_DIR$/src/cmislib/net.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2718">
-              <caret line="151" column="35" lean-forward="true" selection-start-line="151" selection-start-column="35" selection-end-line="151" selection-end-column="35" />
+              <caret line="151" column="35" lean-forward="false" selection-start-line="151" selection-start-column="35" selection-end-line="151" selection-end-column="35" />
               <folding>
                 <element signature="e#1054#1068#0" expanded="true" />
               </folding>
@@ -146,7 +63,7 @@
         <entry file="file://$PROJECT_DIR$/src/cmislib/util.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="522">
-              <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+              <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -169,6 +86,11 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -467,7 +389,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1152">
           <caret line="64" column="30" lean-forward="false" selection-start-line="64" selection-start-column="30" selection-end-line="64" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -483,7 +404,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -499,7 +419,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="468">
           <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#1100#1114#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -515,7 +437,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="18">
           <caret line="113" column="4" lean-forward="false" selection-start-line="113" selection-start-column="4" selection-end-line="113" selection-end-column="4" />
-          <folding />
+          <folding>
+            <element signature="e#981#992#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -530,7 +454,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="529">
           <caret line="138" column="43" lean-forward="true" selection-start-line="138" selection-start-column="43" selection-end-line="138" selection-end-column="43" />
-          <folding />
+          <folding>
+            <element signature="e#1054#1068#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -538,7 +464,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="2838" column="24" lean-forward="false" selection-start-line="2838" selection-start-column="24" selection-end-line="2838" selection-end-column="24" />
-          <folding />
+          <folding>
+            <element signature="e#982#991#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -554,7 +482,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1134">
           <caret line="63" column="34" lean-forward="false" selection-start-line="63" selection-start-column="34" selection-end-line="63" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -622,7 +549,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1188">
           <caret line="66" column="0" lean-forward="false" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -740,7 +666,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="972">
           <caret line="54" column="0" lean-forward="false" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -756,7 +681,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -771,7 +695,7 @@
     <entry file="file://$PROJECT_DIR$/src/cmislib/model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1602">
-          <caret line="89" column="0" lean-forward="true" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+          <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
           <folding>
             <element signature="e#1100#1114#0" expanded="true" />
           </folding>
@@ -781,7 +705,7 @@
     <entry file="file://$PROJECT_DIR$/src/cmislib/net.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2718">
-          <caret line="151" column="35" lean-forward="true" selection-start-line="151" selection-start-column="35" selection-end-line="151" selection-end-column="35" />
+          <caret line="151" column="35" lean-forward="false" selection-start-line="151" selection-start-column="35" selection-end-line="151" selection-end-column="35" />
           <folding>
             <element signature="e#1054#1068#0" expanded="true" />
           </folding>
@@ -791,7 +715,7 @@
     <entry file="file://$PROJECT_DIR$/src/cmislib/util.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="522">
-          <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -800,7 +724,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-384">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -808,7 +731,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -816,7 +738,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -824,7 +745,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -832,14 +752,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="720">
           <caret line="145" column="69" lean-forward="true" selection-start-line="145" selection-start-column="69" selection-end-line="145" selection-end-column="69" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/setup.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
-          <caret line="35" column="75" lean-forward="false" selection-start-line="35" selection-start-column="75" selection-end-line="35" selection-end-column="75" />
+        <state relative-caret-position="678">
+          <caret line="43" column="19" lean-forward="true" selection-start-line="43" selection-start-column="19" selection-end-line="43" selection-end-column="19" />
           <folding>
             <element signature="e#859#868#0" expanded="true" />
           </folding>
