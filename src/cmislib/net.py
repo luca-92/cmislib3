@@ -22,10 +22,9 @@ Module that takes care of network communications for cmislib. It does
 not know anything about CMIS or do anything special with regard to the
 response it receives.
 """
-
-from urllib.parse import urlencode
 import logging
-import httplib2
+from urllib.parse import urlencode
+
 import requests
 from requests.auth import HTTPBasicAuth
 
@@ -114,12 +113,11 @@ class RESTService(object):
 
         self.logger.debug('About to do a PUT on:' + url)
 
-        h = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
-        h.add_credentials(username, password)
         headers['User-Agent'] = self.user_agent
         if contentType is not None:
             headers['Content-Type'] = contentType
-        return h.request(url, body=payload, method='PUT', headers=headers)
+        return requests.put(url, verify=False, headers=headers, auth=HTTPBasicAuth(username, password),
+                                 data=payload)
 
     def post(self,
              url,
@@ -148,9 +146,11 @@ class RESTService(object):
 
         self.logger.debug('About to do a POST on:' + url)
 
-        h = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
-        h.add_credentials(username, password)
+        # h = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
+        # h.add_credentials(username, password)
         headers['User-Agent'] = self.user_agent
         if contentType is not None:
             headers['Content-Type'] = contentType
-        return h.request(url, body=payload, method='POST', headers=headers)
+
+        # return h.requst(url, body=payload, method='POST', headers=headers)
+        return requests.post(url, verify=False, headers=headers, auth=HTTPBasicAuth(username, password),data=payload)

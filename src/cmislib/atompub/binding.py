@@ -22,25 +22,24 @@ Module containing the Atom Pub binding-specific objects used to work with a CMIS
 provider.
 """
 import io
-
-from cmislib.cmis_services import Binding, RepositoryServiceIfc
-from cmislib.domain import CmisId, CmisObject, ObjectType, Property, ACL, ACE, ChangeEntry, ResultSet, Rendition
-from cmislib import messages
-from cmislib.net import RESTService as Rest
-from cmislib.exceptions import CmisException, \
-    ObjectNotFoundException, InvalidArgumentException, \
-    NotSupportedException
-from cmislib.util import multiple_replace, parsePropValue, parseBoolValue, toCMISValue, parseDateTimeValue, safe_quote
-
-from urllib.parse import quote
-from urllib.parse import urlparse, urlunparse
-import re
-import mimetypes
-from xml.parsers.expat import ExpatError
-import datetime
-from io import StringIO
 import logging
+import mimetypes
+
+import re
+from urllib.parse import urlparse, urlunparse
 from xml.dom import minidom
+
+from pyexpat import ExpatError
+
+import datetime
+from src.cmislib.net import RESTService as Rest
+from src.cmislib import messages
+from src.cmislib.cmis_services import Binding, RepositoryServiceIfc
+from src.cmislib.domain import CmisObject, CmisId, ACL, ResultSet, ObjectType, Property, ACE, ChangeEntry, Rendition
+from src.cmislib.exceptions import CmisException, ObjectNotFoundException, NotSupportedException, \
+    InvalidArgumentException
+from src.cmislib.util import toCMISValue, multiple_replace, parseBoolValue, parsePropValue, safe_quote, \
+    parseDateTimeValue
 
 moduleLogger = logging.getLogger('cmislib.atompub.binding')
 
@@ -1721,7 +1720,7 @@ class AtomPubRepository(object):
                 # this repo requires fileable objects to be filed
                 raise InvalidArgumentException
 
-        return parentFolder.createDocument(name, properties, StringIO.StringIO(contentString),
+        return parentFolder.createDocument(name, properties, io.StringIO(contentString),
                                            contentType, contentEncoding)
 
     def createDocument(self,

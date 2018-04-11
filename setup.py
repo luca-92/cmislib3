@@ -19,7 +19,7 @@
 import os
 from setuptools import setup, find_packages
 
-version = '0.6.0'
+version = '1.0.0'
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -30,10 +30,10 @@ setup(
     version = version,
     install_requires = [
         'iso8601',
-        'httplib2'
+        'requests'
         ],
-    author = 'Apache Chemistry Project',
-    author_email = 'dev@chemistry.apache.org',
+    author = 'Apache Chemistry Project, Luca Marchetti',
+    author_email = 'dev@chemistry.apache.org, marchetti.luca.1992@gmail.com',
     license = 'Apache License (2.0)',
     url = 'http://chemistry.apache.org/',
     package_dir = {'':'src'},

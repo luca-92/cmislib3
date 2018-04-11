@@ -21,10 +21,8 @@
 """
 This module contains the base Binding class and other service objects.
 """
-from cmislib.exceptions import CmisException, RuntimeException, \
-    ObjectNotFoundException, InvalidArgumentException, \
-    PermissionDeniedException, NotSupportedException, \
-    UpdateConflictException
+from src.cmislib.exceptions import PermissionDeniedException, InvalidArgumentException, ObjectNotFoundException, \
+    NotSupportedException, UpdateConflictException, RuntimeException, CmisException
 
 
 class Binding(object):

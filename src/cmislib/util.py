@@ -20,12 +20,15 @@
 """
 This module contains handy utility functions.
 """
-import re
-import iso8601
 import logging
-import datetime
-from cmislib.domain import CmisId
 from urllib.parse import urlencode, quote
+
+import re
+
+import datetime
+import iso8601
+
+from src.cmislib.domain import CmisId
 
 moduleLogger = logging.getLogger('cmislib.util')
 

@@ -21,23 +21,20 @@
 Module containing the browser binding-specific objects used to work with a CMIS
 provider.
 """
-import ssl
-
-import io
-import requests
-
-from cmislib.cmis_services import Binding, RepositoryServiceIfc
-from cmislib.domain import CmisId, CmisObject, ObjectType, ACL, ACE, ChangeEntry
-from cmislib.exceptions import CmisException, InvalidArgumentException,\
-                               NotSupportedException, ObjectNotFoundException
-from cmislib.net import RESTService as Rest
-from cmislib.util import parsePropValueByType, parseDateTimeValue, safe_quote,\
-                        safe_urlencode
-from cmislib import messages
 import json
 import logging
-from io import StringIO
+
+import io
+
 import time
+
+from src.cmislib import messages
+from src.cmislib.cmis_services import Binding, RepositoryServiceIfc
+from src.cmislib.domain import CmisId, ACL, CmisObject, ObjectType, ChangeEntry, ACE
+from src.cmislib.exceptions import ObjectNotFoundException, NotSupportedException, CmisException, \
+    InvalidArgumentException
+from src.cmislib.net import RESTService as Rest
+from src.cmislib.util import parsePropValueByType, safe_urlencode, safe_quote, parseDateTimeValue
 
 CMIS_FORM_TYPE = 'application/x-www-form-urlencoded;charset=utf-8'
 
@@ -103,16 +100,17 @@ class BrowserBinding(Binding):
             url = url.decode("utf8")
 
         result = None
-        resp, content = Rest().post(url,
+        resp = Rest().post(url,
                                     payload,
                                     contentType,
                                     username=username,
                                     password=password,
                                     **kwargs)
-        if resp['status'] != '200' and resp['status'] != '201':
+        print(resp.status_code)
+        if resp.status_code != 200 and resp.status_code != 201:
             self._processCommonErrors(resp, url)
-        elif content is not None and content != "":
-            result = json.loads(content.decode("utf8"))
+        elif resp.content is not None and resp.content != "":
+            result = json.loads(resp.content.decode("utf8"))
         return result
 
 
