@@ -25,7 +25,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name = "cmislib",
+    name = "cmislib3",
     description = 'Apache Chemistry CMIS client library for Python',
     version = version,
     install_requires = [
