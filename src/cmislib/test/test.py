@@ -1,5 +1,4 @@
-from browser.binding import BrowserBinding
-from model import CmisClient
+from cmislib.model import CmisClient
 
 
 class CmisDAO(object):
