@@ -7,7 +7,7 @@ class CmisDAO(object):
         self.url = url
         self.username = username
         self.password = password
-        self.client = CmisClient(self.url, self.username, self.password, binding=BrowserBinding())
+        self.client = CmisClient(self.url, self.username, self.password)
 
     def getDocumentStream(self,document_id):
         raise Exception("method not-implemented")
@@ -22,22 +22,29 @@ class CmisAlfresco(CmisDAO):
 
     def getDocumentStream(self,document_id):
         repo = self.client.defaultRepository
-        document = repo.getObject(document_id)
+        document = repo.getObject("idd_"+document_id)
         properties = document.getProperties()
-        print(properties['cmis:name'])
-        doc_update = {'cmis:name': "bla1.eml"}
+        doc_update = {}
         document.updateProperties(doc_update)
         repo = self.client.defaultRepository
-        document = repo.getObject(document_id)
+        document = repo.getObject("idd_"+document_id)
         properties = document.getProperties()
-        print(properties['cmis:name'])
-        return document.getContentStream()
+        document.getContentStream()
+# -------------------------------------------------------------
+        document = repo.getObject("idf_" + "")
+        properties = document.getProperties()
+        doc_update = {}
+        document.updateProperties(doc_update)
+        repo = self.client.defaultRepository
+        document = repo.getObject("idf_" + "")
+        properties = document.getProperties()
+        return ""
 
 
 if __name__ == '__main__':
-    REPOSITORY_URLAL = 'https://docs.dstech.info/alfresco/api/-default-/cmis/versions/1.1/browser'
-    USERNAMEAL = 'l.marchetti@ilivetech.it'
-    PASSWORDAL = 'buthujodac'
+    REPOSITORY_URLAL = ''
+    USERNAMEAL = ''
+    PASSWORDAL = ''
 
     docDao = CmisAlfresco(REPOSITORY_URLAL, USERNAMEAL, PASSWORDAL)
-    docDao.getDocumentStream("workspace://SpacesStore/1c457c61-8b9a-49e4-9edd-ef4801ef76f5")
+    docDao.getDocumentStream()

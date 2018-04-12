@@ -38,6 +38,7 @@ from cmis_services import Binding, RepositoryServiceIfc
 from domain import CmisObject, CmisId, ACL, ResultSet, ObjectType, Property, ChangeEntry, ACE, Rendition
 from exceptions import CmisException, ObjectNotFoundException, NotSupportedException, InvalidArgumentException
 from util import toCMISValue, multiple_replace, parseBoolValue, parsePropValue, safe_quote, parseDateTimeValue
+from net import RESTService as Rest
 
 moduleLogger = logging.getLogger('cmislib.atompub.binding')
 
@@ -192,7 +193,9 @@ class AtomPubBinding(Binding):
         if len(self.extArgs) > 0:
             kwargs.update(self.extArgs)
 
+        print()
         resp = Rest().put(url, payload, contentType, username=username, password=password, **kwargs)
+        print(resp.status_code)
         if resp.status_code != 200 and resp.status_code != 201:
             self._processCommonErrors(resp, url)
             return resp.content
@@ -2522,7 +2525,7 @@ class AtomPubDocument(AtomPubCmisObject):
                                          **self._cmisClient.extArgs)
             if result.status_code != 200:
                 raise CmisException(result['status'])
-            return io.StringIO(result.content)
+            return io.StringIO(result.content.decode("latin"))
         else:
             # otherwise, try to return the value of the content element
             if contentElements[0].childNodes:
@@ -4043,7 +4046,7 @@ def getEntryXmlDoc(repo=None, objectTypeId=None, properties=None, contentFile=No
                 if val is None:
                     continue
                 valElement = entryXmlDoc.createElementNS(CMIS_NS, 'cmis:value')
-                valText = entryXmlDoc.createTextNode(val)
+                valText = entryXmlDoc.createTextNode(str(val))
                 valElement.appendChild(valText)
                 propElement.appendChild(valElement)
             propsElement.appendChild(propElement)
@@ -4124,7 +4127,11 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             propValueStrList = []
             for val in propValue:
                 if val is not None:
-                    propValueStrList.append(val.decode("utf8"))
+                    print(type(val))
+                    if type(val) == float or type(val) == int:
+                        propValueStrList.append(val)
+                    else:
+                        propValueStrList.append(val.decode("utf8"))
                 else:
                     propValueStrList.append(val)
         else:

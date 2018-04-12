@@ -99,7 +99,9 @@ class RESTService(object):
         that gets passed in. The content type header gets set to the
         specified content type.
         """
-
+        if type(url) == bytes:
+            url = url.decode("utf8")
+        print(payload)
         headers = {}
         if kwargs:
             if 'headers' in kwargs:

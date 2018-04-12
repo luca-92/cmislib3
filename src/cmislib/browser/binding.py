@@ -33,6 +33,8 @@ from cmis_services import Binding, RepositoryServiceIfc
 from domain import CmisId, CmisObject, ObjectType, ACL, ChangeEntry, ACE
 from exceptions import ObjectNotFoundException, NotSupportedException, CmisException, InvalidArgumentException
 from util import parsePropValueByType, safe_urlencode, safe_quote, parseDateTimeValue
+from net import RESTService as Rest
+
 
 CMIS_FORM_TYPE = 'application/x-www-form-urlencoded;charset=utf-8'
 
@@ -76,6 +78,7 @@ class BrowserBinding(Binding):
         if resp.status_code != 200:
             self._processCommonErrors(resp, url)
         else:
+            print(resp.content.decode("utf8"))
             result = json.loads(resp.content.decode("utf8"))
         return result
 
