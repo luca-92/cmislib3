@@ -1,5 +1,5 @@
-from src.cmislib.browser.binding import BrowserBinding
-from src.cmislib.model import CmisClient
+from browser.binding import BrowserBinding
+from model import CmisClient
 
 
 class CmisDAO(object):

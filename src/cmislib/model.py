@@ -24,8 +24,8 @@ really appropriate, but it is kept for backwards compatibility.
 """
 import logging
 
-from src.cmislib.atompub.binding import AtomPubBinding
-from src.cmislib.cmis_services import Binding
+from atompub.binding import AtomPubBinding
+from cmis_services import Binding
 
 moduleLogger = logging.getLogger('cmislib.model')
 

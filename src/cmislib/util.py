@@ -28,7 +28,7 @@ import re
 import datetime
 import iso8601
 
-from src.cmislib.domain import CmisId
+from domain import CmisId
 
 moduleLogger = logging.getLogger('cmislib.util')
 

@@ -32,14 +32,12 @@ from xml.dom import minidom
 from pyexpat import ExpatError
 
 import datetime
-from src.cmislib.net import RESTService as Rest
-from src.cmislib import messages
-from src.cmislib.cmis_services import Binding, RepositoryServiceIfc
-from src.cmislib.domain import CmisObject, CmisId, ACL, ResultSet, ObjectType, Property, ACE, ChangeEntry, Rendition
-from src.cmislib.exceptions import CmisException, ObjectNotFoundException, NotSupportedException, \
-    InvalidArgumentException
-from src.cmislib.util import toCMISValue, multiple_replace, parseBoolValue, parsePropValue, safe_quote, \
-    parseDateTimeValue
+
+import messages
+from cmis_services import Binding, RepositoryServiceIfc
+from domain import CmisObject, CmisId, ACL, ResultSet, ObjectType, Property, ChangeEntry, ACE, Rendition
+from exceptions import CmisException, ObjectNotFoundException, NotSupportedException, InvalidArgumentException
+from util import toCMISValue, multiple_replace, parseBoolValue, parsePropValue, safe_quote, parseDateTimeValue
 
 moduleLogger = logging.getLogger('cmislib.atompub.binding')
 

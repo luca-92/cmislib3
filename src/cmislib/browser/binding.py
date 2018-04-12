@@ -28,13 +28,11 @@ import io
 
 import time
 
-from src.cmislib import messages
-from src.cmislib.cmis_services import Binding, RepositoryServiceIfc
-from src.cmislib.domain import CmisId, ACL, CmisObject, ObjectType, ChangeEntry, ACE
-from src.cmislib.exceptions import ObjectNotFoundException, NotSupportedException, CmisException, \
-    InvalidArgumentException
-from src.cmislib.net import RESTService as Rest
-from src.cmislib.util import parsePropValueByType, safe_urlencode, safe_quote, parseDateTimeValue
+import messages
+from cmis_services import Binding, RepositoryServiceIfc
+from domain import CmisId, CmisObject, ObjectType, ACL, ChangeEntry, ACE
+from exceptions import ObjectNotFoundException, NotSupportedException, CmisException, InvalidArgumentException
+from util import parsePropValueByType, safe_urlencode, safe_quote, parseDateTimeValue
 
 CMIS_FORM_TYPE = 'application/x-www-form-urlencoded;charset=utf-8'
 
