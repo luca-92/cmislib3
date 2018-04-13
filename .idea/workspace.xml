@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f2b8aa0c-4424-49e1-be47-90c3ed4d0adb" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/test/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/test/test.py" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/tests/settings.py.sample" afterPath="$PROJECT_DIR$/src/tests/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cmislib/atompub/binding.py" afterPath="$PROJECT_DIR$/src/cmislib/atompub/binding.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tests/cmislibtest.py" afterPath="$PROJECT_DIR$/src/tests/cmislibtest.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tests/test_browser.py" afterPath="$PROJECT_DIR$/src/tests/test_browser.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/setup.py" afterPath="$PROJECT_DIR$/setup.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,14 +13,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="cmislibtest.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="cmislibtest.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/tests/cmislibtest.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="846">
-              <caret line="47" column="0" lean-forward="true" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+              <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
               <folding>
                 <element signature="e#915#930#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="setup.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/setup.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="282">
+              <caret line="21" column="16" lean-forward="false" selection-start-line="21" selection-start-column="16" selection-end-line="21" selection-end-column="16" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -155,7 +159,6 @@
         <option value="$PROJECT_DIR$/src/cmislib/test/__init__.py" />
         <option value="$PROJECT_DIR$/src/cmislib/model.py" />
         <option value="$PROJECT_DIR$/src/cmislib/util.py" />
-        <option value="$PROJECT_DIR$/setup.py" />
         <option value="$PROJECT_DIR$/src/cmislib/test/test.py" />
         <option value="$PROJECT_DIR$/src/cmislib/browser/binding.py" />
         <option value="$PROJECT_DIR$/src/cmislib/cmis_services.py" />
@@ -164,6 +167,7 @@
         <option value="$PROJECT_DIR$/src/tests/cmislibtest.py" />
         <option value="$PROJECT_DIR$/src/cmislib/atompub/binding.py" />
         <option value="$PROJECT_DIR$/src/tests/settings.py" />
+        <option value="$PROJECT_DIR$/setup.py" />
       </list>
     </option>
   </component>
@@ -636,13 +640,6 @@
     <entry file="file://$PROJECT_DIR$/src/cmislib.egg-info/requires.txt" />
     <entry file="file://$PROJECT_DIR$/src/cmislib.egg-info/PKG-INFO" />
     <entry file="file://$PROJECT_DIR$/src/cmislib.egg-info/dependency_links.txt" />
-    <entry file="file://$PROJECT_DIR$/setup.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="29" column="22" lean-forward="true" selection-start-line="29" selection-start-column="22" selection-end-line="29" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/cmislib/browser/binding.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="297">
@@ -748,10 +745,18 @@
     <entry file="file://$PROJECT_DIR$/src/tests/cmislibtest.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="846">
-          <caret line="47" column="0" lean-forward="true" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+          <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
           <folding>
             <element signature="e#915#930#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/setup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="282">
+          <caret line="21" column="16" lean-forward="false" selection-start-line="21" selection-start-column="16" selection-end-line="21" selection-end-column="16" />
+          <folding />
         </state>
       </provider>
     </entry>
