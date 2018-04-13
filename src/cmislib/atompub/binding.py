@@ -193,9 +193,8 @@ class AtomPubBinding(Binding):
         if len(self.extArgs) > 0:
             kwargs.update(self.extArgs)
 
-        print()
         resp = Rest().put(url, payload, contentType, username=username, password=password, **kwargs)
-        print(resp.status_code)
+
         if resp.status_code != 200 and resp.status_code != 201:
             self._processCommonErrors(resp, url)
             return resp.content
@@ -4076,7 +4075,10 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
         if isList:
             propValueStrList = []
             for val in propValue:
-                propValueStrList.append(val)
+                if type(val) == float or type(val) == int:
+                    propValueStrList.append(val)
+                else:
+                    propValueStrList.append(val.decode("utf8"))
         else:
             propValueStrList = [propValue]
     elif propType == 'datetime' or propType == datetime.datetime:
@@ -4085,7 +4087,10 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             propValueStrList = []
             for val in propValue:
                 if val is not None:
-                    propValueStrList.append(val.isoformat())
+                    if type(val) == float or type(val) == int:
+                        propValueStrList.append(val)
+                    else:
+                        propValueStrList.append(val.decode("utf8"))
                 else:
                     propValueStrList.append(val)
         else:
@@ -4099,7 +4104,10 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             propValueStrList = []
             for val in propValue:
                 if val is not None:
-                    propValueStrList.append(val.decode("utf8").lower())
+                    if type(val) == float or type(val) == int:
+                        propValueStrList.append(val)
+                    else:
+                        propValueStrList.append(val.decode("utf8"))
                 else:
                     propValueStrList.append(val)
         else:
@@ -4113,7 +4121,10 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             propValueStrList = []
             for val in propValue:
                 if val is not None:
-                    propValueStrList.append(val.decode("utf8"))
+                    if type(val) == float or type(val) == int:
+                        propValueStrList.append(val)
+                    else:
+                        propValueStrList.append(val.decode("utf8"))
                 else:
                     propValueStrList.append(val)
         else:
@@ -4127,7 +4138,6 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             propValueStrList = []
             for val in propValue:
                 if val is not None:
-                    print(type(val))
                     if type(val) == float or type(val) == int:
                         propValueStrList.append(val)
                     else:
@@ -4145,7 +4155,10 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             propValueStrList = []
             for val in propValue:
                 if val is not None:
-                    propValueStrList.append(val.decode("utf8"))
+                    if type(val) == float or type(val) == int:
+                        propValueStrList.append(val)
+                    else:
+                        propValueStrList.append(val.decode("utf8"))
                 else:
                     propValueStrList.append(val)
         else:

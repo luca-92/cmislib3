@@ -58,7 +58,6 @@ class Binding(object):
         elif error.status_code == 405:
             raise NotSupportedException(error.status_code, url)
         elif error.status_code == 409:
-            print(url)
             raise UpdateConflictException(error.status_code, url)
         elif error.status_code == 500:
             raise RuntimeException(error.status_code, url)

@@ -78,7 +78,6 @@ class BrowserBinding(Binding):
         if resp.status_code != 200:
             self._processCommonErrors(resp, url)
         else:
-            print(resp.content.decode("utf8"))
             result = json.loads(resp.content.decode("utf8"))
         return result
 
@@ -107,7 +106,7 @@ class BrowserBinding(Binding):
                                     username=username,
                                     password=password,
                                     **kwargs)
-        print(resp.status_code)
+
         if resp.status_code != 200 and resp.status_code != 201:
             self._processCommonErrors(resp, url)
         elif resp.content is not None and resp.content != "":
@@ -1048,7 +1047,6 @@ class BrowserRepository(object):
             typesUrl += "&typeId=%s" % (safe_quote(typeId))
         if depth is not None:
             typesUrl += "&depth=%s" % (depth)
-        print(typesUrl)
 
         result = self._cmisClient.binding.get(typesUrl,
                                               self._cmisClient.username,
@@ -3211,7 +3209,6 @@ def setProps(properties, props, initialIndex=0):
     for key, val in properties.items():
         props["propertyId[%s]" % i] = key
         if hasattr(val, '__iter__'):
-            print("sto qua")
             j = 0
             # if type(val) == list:
             #     for v in val:

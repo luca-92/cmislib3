@@ -101,7 +101,6 @@ class RESTService(object):
         """
         if type(url) == bytes:
             url = url.decode("utf8")
-        print(payload)
         headers = {}
         if kwargs:
             if 'headers' in kwargs:
