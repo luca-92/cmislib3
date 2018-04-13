@@ -32,9 +32,10 @@ from cmislib.exceptions import \
 from cmislib import messages
 import os
 from time import sleep, time
-import settings
 
 ## Fix test file paths in case test is launched using nosetests
+from tests import settings
+
 my_dir = os.path.dirname(os.path.abspath(__file__))
 try:
     os.stat(settings.TEST_BINARY_1)

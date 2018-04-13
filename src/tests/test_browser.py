@@ -52,7 +52,7 @@ class BrowserACLTest(unittest.TestCase):
         self.acl.removeEntry(self.aceUser1.principalId)
         removedAces = self.acl.getRemovedAces()
         self.assertEqual(len(removedAces), 1)
-        self.assertEqual(removedAces[0], self.aceUser1)
+        self.assertEqual(removedAces[0].__dict__, self.aceUser1.__dict__)
         # test partial removal of an entry (delete all + add an existing one
         #  with same direct)
         self.acl.removeEntry(self.aceUser2.principalId)
