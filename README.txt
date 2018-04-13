@@ -1,6 +1,6 @@
 ABOUT
 
-Thanks for using cmislib, the CMIS client library for Python.
+Thanks for using cmislib, the CMIS client library for Python v. >= 3.
 
 The goal of this library is to provide an interoperable API to CMIS
 repositories such as Alfresco, Nuxeo, KnowledgeTree, MS SharePoint,
@@ -11,7 +11,8 @@ http://www.oasis-open.org/committees/cmis
 
 SOURCE
 
-The source code for this project lives at http://chemistry.apache.org/
+The source code for this project implemented for Python 2 lives at http://chemistry.apache.org/.
+The source code for this project implemented for Python 3 lives at https://github.com/luca-92/cmislib3.
 
 TESTS
 
