@@ -141,7 +141,8 @@ class AtomPubBinding(Binding):
         # merge the cmis client extended args with the ones that got passed in
         if len(self.extArgs) > 0:
             kwargs.update(self.extArgs)
-
+        if type(url) == bytes:
+            url = url.decode("utf8")
         resp = Rest().delete(url, username=username,       password=password,
                                       **kwargs)
         if resp.status_code != 200 and resp.status_code != 204:
@@ -165,6 +166,8 @@ class AtomPubBinding(Binding):
         if len(self.extArgs) > 0:
             kwargs.update(self.extArgs)
 
+        if type(url) == bytes:
+            url = url.decode("utf8")
         resp = Rest().post(url, payload, contentType, username=username, password=password, **kwargs)
         if resp.status_code == 200:
             try:
@@ -190,7 +193,8 @@ class AtomPubBinding(Binding):
         :class:`CmisObject.updateProperties`. Or, to check in a document that's
         been checked out, you'd call :class:`Document.checkin` on the PWC.
         """
-
+        if type(url) == bytes:
+            url = url.decode("utf8")
         # merge the cmis client extended args with the ones that got passed in
         if len(self.extArgs) > 0:
             kwargs.update(self.extArgs)
