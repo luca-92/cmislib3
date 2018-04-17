@@ -113,7 +113,6 @@ class AtomPubBinding(Binding):
         """
         if type(url) == bytes:
             url = url.decode("utf8")
-        print(type(url))
         # merge the cmis client extended args with the ones that got passed in
         if len(self.extArgs) > 0:
             kwargs.update(self.extArgs)
