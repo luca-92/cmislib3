@@ -4082,6 +4082,8 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             for val in propValue:
                 if type(val) == float or type(val) == int:
                     propValueStrList.append(val)
+                elif type(val) == str:
+                    propValueStrList.append(val)
                 else:
                     propValueStrList.append(val.decode("utf8"))
         else:
@@ -4093,6 +4095,8 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             for val in propValue:
                 if val is not None:
                     if type(val) == float or type(val) == int:
+                        propValueStrList.append(val)
+                    elif type(val) == str:
                         propValueStrList.append(val)
                     else:
                         propValueStrList.append(val.decode("utf8"))
@@ -4111,6 +4115,8 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
                 if val is not None:
                     if type(val) == float or type(val) == int:
                         propValueStrList.append(val)
+                    elif type(val) == str:
+                        propValueStrList.append(val)
                     else:
                         propValueStrList.append(val.decode("utf8"))
                 else:
@@ -4127,6 +4133,8 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             for val in propValue:
                 if val is not None:
                     if type(val) == float or type(val) == int:
+                        propValueStrList.append(val)
+                    elif type(val) == str:
                         propValueStrList.append(val)
                     else:
                         propValueStrList.append(val.decode("utf8"))
@@ -4145,6 +4153,8 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
                 if val is not None:
                     if type(val) == float or type(val) == int:
                         propValueStrList.append(val)
+                    elif type(val) == str:
+                        propValueStrList.append(val)
                     else:
                         propValueStrList.append(val.decode("utf8"))
                 else:
@@ -4161,6 +4171,8 @@ def getElementNameAndValues(propType, propName, propValue, isList=False):
             for val in propValue:
                 if val is not None:
                     if type(val) == float or type(val) == int:
+                        propValueStrList.append(val)
+                    elif type(val) == str:
                         propValueStrList.append(val)
                     else:
                         propValueStrList.append(val.decode("utf8"))
