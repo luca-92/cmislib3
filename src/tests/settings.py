@@ -24,12 +24,12 @@ from cmislib.browser.binding import BrowserBinding
 #
 # CMIS repository's service URL
 # REPOSITORY_URL = 'http://cmis.alfresco.com/s/cmis' # Alfresco demo
-#REPOSITORY_URL = 'http://localhost:8081/chemistry/atom' # Apache Chemistry AtomPub
+REPOSITORY_URL = 'http://localhost:8081/chemistry/atom' # Apache Chemistry AtomPub
 #REPOSITORY_URL = 'http://localhost:8081/chemistry/browser' # Apache Chemistry Browser
 # REPOSITORY_URL = 'http://localhost:8080/alfresco/cmisatom'  # Alfresco 4.0 AtomPub
 # REPOSITORY_URL = 'http://localhost:8080/alfresco/s/api/cmis'  # Alfresco
 # REPOSITORY_URL = 'http://localhost:8080/alfresco/api/-default-/cmis/versions/1.0/atom' # Alfresco 4.2 CMIS 1.0 Atom
-REPOSITORY_URL = 'https://docs.dstech.info/alfresco/api/-default-/cmis/versions/1.1/atom' # Alfresco 4.2 CMIS 1.1 Atom
+# REPOSITORY_URL = 'https://docs.dstech.info/alfresco/api/-default-/cmis/versions/1.1/atom' # Alfresco 4.2 CMIS 1.1 Atom
 #REPOSITORY_URL = 'http://cmis.demo.nuxeo.org/nuxeo/atom/cmis' # Nuxeo demo
 #REPOSITORY_URL = 'http://localhost:8080/nuxeo/atom/cmis' # Nuxeo local
 
@@ -38,8 +38,8 @@ BINDING = AtomPubBinding()
 #BINDING = BrowserBinding()
 
 # CMIS repository credentials
-# USERNAME = 'admin'  # Alfresco
-# PASSWORD = 'admin'  # Alfresco
+USERNAME = 'admin'  # Alfresco
+PASSWORD = 'admin'  # Alfresco
 #USERNAME = ''
 #PASSWORD = ''
 #USERNAME = 'Administrator'  # Nuxeo

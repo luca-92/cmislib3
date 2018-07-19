@@ -3280,7 +3280,13 @@ def encode_multipart_formdata(fields, contentFile, contentType):
 
     L.append('--' + boundary + '--')
     L.append('')
-    body = crlf.join(L)
+    L2 = []
+    for i in L:
+        if type(i) == bytes:
+            L2.append(i.decode("utf-8"))
+        else:
+            L2.append(i)
+    body = crlf.join(L2)
     content_type = 'multipart/form-data; boundary=%s' % boundary
     return content_type, body
 
