@@ -24,6 +24,7 @@ provider.
 import io
 import logging
 import mimetypes
+import base64
 
 import re
 from urllib.parse import urlparse, urlunparse
@@ -3993,7 +3994,9 @@ def getEntryXmlDoc(repo=None, objectTypeId=None, properties=None, contentFile=No
         # present, so it seems reasonable to use CMIS_RA content for now
         # and encode everything.
 
-        fileData = contentFile.read().encode("base64")
+        fileData = contentFile.read()
+        if isinstance(fileData, bytes):
+            fileData = base64.b64encode(fileData).decode('utf-8')
         mediaElement = entryXmlDoc.createElementNS(CMISRA_NS, 'cmisra:mediatype')
         mediaElementText = entryXmlDoc.createTextNode(mimetype)
         mediaElement.appendChild(mediaElementText)
