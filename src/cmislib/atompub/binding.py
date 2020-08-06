@@ -2530,7 +2530,7 @@ class AtomPubDocument(AtomPubCmisObject):
                                          **self._cmisClient.extArgs)
             if result.status_code != 200:
                 raise CmisException(result['status'])
-            return io.StringIO(result.content.decode("latin"))
+            return io.BytesIO(result.content)
         else:
             # otherwise, try to return the value of the content element
             if contentElements[0].childNodes:
